@@ -16,10 +16,10 @@ Dir.cd(build_dir) do
   crystal_bin = "#{cache_dir}/crystal/bin/crystal"
 
   puts "Installing Dependencies"
-  Process.run(crystal_bin, ["deps", "--production"], output: true, error: true)
+  Process.run(crystal_bin, ["deps", "--production"], output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
 
   puts "Compiling src/#{shard_name}.cr (auto-detected from shard.yml)"
-  Process.run(crystal_bin, ["build", "src/#{shard_name}.cr", "--release", "-o", "app"], output: true, error: true)
+  Process.run(crystal_bin, ["build", "src/#{shard_name}.cr", "--release", "-o", "app"], output: Process::Redirect::Inherit, error: Process::Redirect::Inherit)
 
   ## Copy to cache directory
   puts "Copy lib dir to cache"

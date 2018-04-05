@@ -1,0 +1,5 @@
+/pkg
+/.bin
+/crystal_buildpack-*.zip
+/.*.cache
+/*.droplet

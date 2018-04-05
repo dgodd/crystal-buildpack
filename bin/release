@@ -1,4 +1,7 @@
-#!/bin/bash
-set -euo pipefail
-
-cat /tmp/crystal-buildpack-release-step.yml
+#!/usr/bin/env bash
+# bin/release <build-dir>
+if [ -f "/tmp/crystal-buildpack-release-step.yml" ]; then
+  cat "/tmp/crystal-buildpack-release-step.yml"
+else
+  echo -e "---\ndefault_process_types:\n  web: '>&2 echo Please specify a default start command for this buildpack && exit 1'"
+fi

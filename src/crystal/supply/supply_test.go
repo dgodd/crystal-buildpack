@@ -135,10 +135,25 @@ var _ = Describe("Supply", func() {
 			mockCommand.EXPECT().Run(gomock.Any()).Do(func(cmd *exec.Cmd) error {
 				Expect(cmd.Dir).To(Equal(buildDir))
 				Expect(cmd.Env).To(ContainElement(fmt.Sprintf("SHARDS_INSTALL_PATH=%s/shards_lib", cacheDir)))
-				Expect(cmd.Args).To(Equal([]string{"crystal", "deps", "--production"}))
+				Expect(cmd.Args).To(Equal([]string{"shards", "install", "--production"}))
 				return nil
 			})
 			Expect(supplier.InstallShards()).To(Succeed())
+		})
+
+		Context("crystal version < 0.25.0", func() {
+			BeforeEach(func() {
+				supplier.Shard.CrystalVersion = "0.24.2"
+			})
+			It("installs shards to cachedir", func() {
+				mockCommand.EXPECT().Run(gomock.Any()).Do(func(cmd *exec.Cmd) error {
+					Expect(cmd.Dir).To(Equal(buildDir))
+					Expect(cmd.Env).To(ContainElement(fmt.Sprintf("SHARDS_INSTALL_PATH=%s/shards_lib", cacheDir)))
+					Expect(cmd.Args).To(Equal([]string{"crystal", "deps", "--production"}))
+					return nil
+				})
+				Expect(supplier.InstallShards()).To(Succeed())
+			})
 		})
 	})
 

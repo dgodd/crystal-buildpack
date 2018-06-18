@@ -122,7 +122,10 @@ func (s *Supplier) InstallCrystal() error {
 func (s *Supplier) InstallShards() error {
 	s.Log.BeginStep("Installing Dependencies")
 
-	cmd := exec.Command("crystal", "deps", "--production")
+	cmd := exec.Command("shards", "install", "--production")
+	if s.Shard.CrystalVersion == "0.24.2" || s.Shard.CrystalVersion == "0.22.0" {
+		cmd = exec.Command("crystal", "deps", "--production")
+	}
 	cmd.Dir = s.Stager.BuildDir()
 	cmd.Stdout = text.NewIndentWriter(os.Stdout, []byte("       "))
 	cmd.Stderr = text.NewIndentWriter(os.Stderr, []byte("       "))

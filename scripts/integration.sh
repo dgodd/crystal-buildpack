@@ -9,7 +9,5 @@ source .envrc
 GINKGO_NODES=${GINKGO_NODES:-3}
 GINKGO_ATTEMPTS=${GINKGO_ATTEMPTS:-1}
 
-cd src/*/integration
-
 echo "Run Cached Buildpack"
-ginkgo -r --flakeAttempts=$GINKGO_ATTEMPTS -nodes $GINKGO_NODES --slowSpecThreshold=60 -- --cached=true
+ginkgo -r --flakeAttempts=$GINKGO_ATTEMPTS -nodes $GINKGO_NODES --slowSpecThreshold=60 -- --cached=true integration

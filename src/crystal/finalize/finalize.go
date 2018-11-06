@@ -13,9 +13,14 @@ type Stager interface {
 	DepsDir() string
 }
 
+type Manifest interface{}
+type Command interface{}
+
 type Finalizer struct {
-	Stager Stager
-	Log    *libbuildpack.Logger
+	Manifest Manifest
+	Stager   Stager
+	Command  Command
+	Log      *libbuildpack.Logger
 }
 
 func (f *Finalizer) Run() error {

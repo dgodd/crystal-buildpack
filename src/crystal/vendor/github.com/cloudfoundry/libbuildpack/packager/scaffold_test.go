@@ -1,14 +1,13 @@
 package packager_test
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"time"
 
-	httpmock "gopkg.in/jarcoal/httpmock.v1"
+	"gopkg.in/jarcoal/httpmock.v1"
 
 	"github.com/cloudfoundry/libbuildpack"
 	"github.com/cloudfoundry/libbuildpack/packager"
@@ -18,26 +17,16 @@ import (
 )
 
 var _ = Describe("Scaffold", func() {
-	var (
-		buildpackDir string
-		version      string
-		cacheDir     string
-	)
+
+	var err error
 
 	BeforeEach(func() {
-		var err error
-		buildpackDir = "./fixtures/good"
-		cacheDir, err = ioutil.TempDir("", "packager-cachedir")
-		Expect(err).To(BeNil())
-		version = fmt.Sprintf("1.23.45.%s", time.Now().Format("20060102150405"))
-
 		httpmock.Reset()
 	})
 
 	Describe("Init", func() {
 		var baseDir string
 		BeforeEach(func() {
-			var err error
 			baseDir, err = ioutil.TempDir("", "scaffold-basedir")
 			Expect(err).To(BeNil())
 
@@ -120,8 +109,6 @@ var _ = Describe("Scaffold", func() {
 			Expect(err).To(BeNil())
 
 			Expect(libbuildpack.CopyDirectory("fixtures/modified", baseDir)).To(Succeed())
-
-			// run the code under test
 		})
 		AfterEach(func() {
 			os.RemoveAll(baseDir)

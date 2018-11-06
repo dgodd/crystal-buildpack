@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 # bin/release <build-dir>
-if [ -f "/tmp/crystal-buildpack-release-step.yml" ]; then
-  cat "/tmp/crystal-buildpack-release-step.yml"
-else
-  echo -e "---\ndefault_process_types:\n  web: '>&2 echo Please specify a default start command for this buildpack && exit 1'"
-fi
+# This script provides feedback metadata to Cloud Foundry indicating how the app should be executed
+
+echo -e "---\ndefault_process_types:\n  web: '>&2 echo Please specify a default start command for this buildpack && exit 1'"

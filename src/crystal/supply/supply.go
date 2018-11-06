@@ -20,6 +20,10 @@ type Stager interface {
 type Manifest interface {
 	RootDir() string
 	AllDependencyVersions(string) []string
+}
+
+type Installer interface {
+	//TODO: See more options at https://github.com/cloudfoundry/libbuildpack/blob/master/installer.go
 	InstallDependency(libbuildpack.Dependency, string) error
 	InstallOnlyVersion(string, string) error
 }
@@ -30,11 +34,12 @@ type Command interface {
 }
 
 type Supplier struct {
-	Manifest Manifest
-	Stager   Stager
-	Command  Command
-	Log      *libbuildpack.Logger
-	Shard    struct {
+	Manifest  Manifest
+	Installer Installer
+	Stager    Stager
+	Command   Command
+	Log       *libbuildpack.Logger
+	Shard     struct {
 		Name           string `yaml:"name"`
 		CrystalVersion string `yaml:"crystal"`
 	}
@@ -89,7 +94,7 @@ func (s *Supplier) Setup() error {
 }
 
 func (s *Supplier) UntarLibevent() error {
-	if err := s.Manifest.InstallOnlyVersion("libevent", s.Stager.DepDir()); err != nil {
+	if err := s.Installer.InstallOnlyVersion("libevent", s.Stager.DepDir()); err != nil {
 		return err
 	}
 	if err := s.Stager.LinkDirectoryInDepDir(filepath.Join(s.Stager.DepDir(), "libevent", "lib"), "lib"); err != nil {
@@ -102,7 +107,7 @@ func (s *Supplier) UntarLibevent() error {
 }
 
 func (s *Supplier) InstallCrystal() error {
-	if err := s.Manifest.InstallDependency(libbuildpack.Dependency{Name: "crystal", Version: s.Shard.CrystalVersion}, s.Stager.DepDir()); err != nil {
+	if err := s.Installer.InstallDependency(libbuildpack.Dependency{Name: "crystal", Version: s.Shard.CrystalVersion}, s.Stager.DepDir()); err != nil {
 		return err
 	}
 	crystalDir, err := filepath.Glob(filepath.Join(s.Stager.DepDir(), "crystal-*"))

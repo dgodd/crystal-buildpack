@@ -1,48 +1,41 @@
 package finalize
 
 import (
-	"io"
+	"fmt"
 
 	"github.com/cloudfoundry/libbuildpack"
 )
 
 type Stager interface {
-	//TODO: See more options at https://github.com/cloudfoundry/libbuildpack/blob/master/stager.go
 	BuildDir() string
 	DepDir() string
 	DepsIdx() string
 	DepsDir() string
 }
 
-type Manifest interface {
-	//TODO: See more options at https://github.com/cloudfoundry/libbuildpack/blob/master/manifest.go
-	AllDependencyVersions(string) []string
-}
-
-type Installer interface {
-	//TODO: See more options at https://github.com/cloudfoundry/libbuildpack/blob/master/installer.go
-	DefaultVersion(string) (libbuildpack.Dependency, error)
-	InstallDependency(libbuildpack.Dependency, string) error
-	InstallOnlyVersion(string, string) error
-}
-
-type Command interface {
-	//TODO: See more options at https://github.com/cloudfoundry/libbuildpack/blob/master/command.go
-	Execute(string, io.Writer, io.Writer, string, ...string) error
-	Output(dir string, program string, args ...string) (string, error)
-}
-
 type Finalizer struct {
-	Manifest Manifest
-	Stager   Stager
-	Command  Command
-	Log      *libbuildpack.Logger
+	Stager Stager
+	Log    *libbuildpack.Logger
 }
 
 func (f *Finalizer) Run() error {
 	f.Log.BeginStep("Configuring crystal")
 
-	// TODO: Prepare app for launch here here...
+	data, err := f.GenerateReleaseYaml()
+	if err != nil {
+		f.Log.Error("Error generating release YAML: %v", err)
+		return err
+	}
+	libbuildpack.NewYAML().Write("/tmp/crystal-buildpack-release-step.yml", data)
 
 	return nil
+}
+
+func (f *Finalizer) GenerateReleaseYaml() (map[string]map[string]string, error) {
+	processTypes := map[string]string{
+		"web": fmt.Sprintf("$DEPS_DIR/%s/app --port $PORT", f.Stager.DepsIdx()),
+	}
+	return map[string]map[string]string{
+		"default_process_types": processTypes,
+	}, nil
 }

@@ -23,6 +23,8 @@
   name = "github.com/cloudfoundry/libbuildpack"
   packages = [
     ".",
+    "ansicleaner",
+    "bratshelper",
     "cutlass",
     "packager",
   ]
@@ -35,6 +37,14 @@
   packages = ["."]
   pruneopts = ""
   revision = "aacba83f36a55ac31cbb71c06547a328c0cd1604"
+
+[[projects]]
+  digest = "1:73a7106c799f98af4f3da7552906efc6a2570329f4cd2d2f5fb8f9d6c053ff2f"
+  name = "github.com/golang/mock"
+  packages = ["gomock"]
+  pruneopts = ""
+  revision = "c34cdb4725f4c3844d095133c6e40e448b86589b"
+  version = "v1.1.1"
 
 [[projects]]
   branch = "master"
@@ -57,6 +67,14 @@
   pruneopts = ""
   revision = "a30252cb686a21eb2d0b98132633053ec2f7f1e5"
   version = "v1.0.0"
+
+[[projects]]
+  digest = "1:11b056b4421396ab14e384ab8ab8c2079b03f1e51aa5eb4d9b81f9e0d1aa8fbf"
+  name = "github.com/kr/text"
+  packages = ["."]
+  pruneopts = ""
+  revision = "e2ffdb16a802fe2bb95e2e35ff34f0e53aeef34f"
+  version = "v0.1.0"
 
 [[projects]]
   branch = "master"
@@ -127,6 +145,7 @@
   digest = "1:6ce856debb8efe03fa14d8637c6f573df043d2571cacca0266f122b3d4716729"
   name = "golang.org/x/net"
   packages = [
+    "context",
     "html",
     "html/atom",
     "html/charset",
@@ -197,10 +216,13 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/blang/semver",
     "github.com/cloudfoundry/libbuildpack",
+    "github.com/cloudfoundry/libbuildpack/ansicleaner",
+    "github.com/cloudfoundry/libbuildpack/bratshelper",
     "github.com/cloudfoundry/libbuildpack/cutlass",
+    "github.com/golang/mock/gomock",
     "github.com/google/subcommands",
+    "github.com/kr/text",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
   ]
